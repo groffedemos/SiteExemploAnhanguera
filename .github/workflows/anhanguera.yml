@@ -8,7 +8,7 @@ on:
 
 env:
   IMAGEM_DOCKERHUB: ${{ secrets.DOCKERHUB_USERNAME }}/sitestecnologia
-  NOME_WEBAPP: groffetestes
+  NOME_WEBAPP: groffeanhanguera
   
 jobs:
 
@@ -35,3 +35,20 @@ jobs:
     - name: Geração de tag com número do Build e Push no Docker Hub
       run: |
         docker push --all-tags ${{ env.IMAGEM_DOCKERHUB }}
+        
+  deployment-azwebapp:
+    needs: [build]
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Azure Login - Conectando com Credenciais no Azure
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Azure WebApp - Deployment da Aplicacao
+      uses: Azure/webapps-deploy@v2.2.3
+      with:
+        app-name: ${{ env.NOME_WEBAPP }}
+        images: '${{ env.IMAGEM_DOCKERHUB }}:${{ github.run_number }}'
