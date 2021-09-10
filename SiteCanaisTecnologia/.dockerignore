@@ -1,2 +1,2 @@
-*.pdb
+.pdb
 appsettings.Development.json
