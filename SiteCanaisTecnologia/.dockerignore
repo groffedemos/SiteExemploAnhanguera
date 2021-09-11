@@ -1,2 +1,3 @@
 appsettings.Development.json
-**/*.pdb
+bin\
+obj\
